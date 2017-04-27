@@ -12,7 +12,7 @@ bufferSequence = ("Buffer")
 ri = ("")
 
 -- This is the text editor itself
- textEditor = [leftSequence, highlightSequence, rightSequence, bufferSequence]
+textEditor = [leftSequence, highlightSequence, rightSequence, bufferSequence]
 
 -- This concatenates a message onto the left sequence. However I need to allow
 -- parameters to do this.
