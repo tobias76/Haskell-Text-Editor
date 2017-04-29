@@ -1,31 +1,15 @@
-import Data.List
-import System.IO
+data TextEditor = TextEditor ([Char],[Char],[Char],[Char]) deriving(Show)
 
--- Notes
--- Concatinating is ++
+text :: TextEditor
 
--- These are the sequences we will manipulate
-leftSequence = ("Left")
-rightSequence = ("Right")
-highlightSequence = ("Highlight")
-bufferSequence = ("Buffer")
-ri = ("")
+text = TextEditor("The cat", " ", "sat on the mat", " ")
 
--- This is the text editor itself
-textEditor = [leftSequence, highlightSequence, rightSequence, bufferSequence]
+-- Define the functions
+characterInsert :: Char -> TextEditor -> TextEditor
+characterDelete :: TextEditor -> TextEditor
 
--- This concatenates a message onto the left sequence. However I need to allow
--- parameters to do this.
+-- Character Insert
+characterInsert char (TextEditor(l, hi, r, b)) = (TextEditor(reverse (char: reverse l), hi, r, b))
 
--- TODO: This is not finished
-characterInsert = do
-  leftSequence ++ "Hi"
-
--- This deletes a character but I need to show the full text editor after
-characterDelete = do
-  tail rightSequence
-
---TODO: Fix this
-backspace = do
-  reverse leftSequence
-  drop 1 leftSequence
+-- Character Delete
+characterDelete(TextEditor(l, hi, r, b)) = (TextEditor(((l ++ (tail r)), hi, " ", b)))
