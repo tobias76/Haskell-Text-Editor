@@ -10,6 +10,10 @@ lineEnd :: TextEditor -> TextEditor
 characterInsert :: Char -> TextEditor -> TextEditor
 characterDelete :: TextEditor -> TextEditor
 backspace :: TextEditor -> TextEditor
+highlightToStart :: TextEditor -> TextEditor
+highlightToEnd :: TextEditor -> TextEditor
+highlightCharacterBefore :: TextEditor -> TextEditor
+highlightCharacterAfter :: TextEditor -> TextEditor
 copy :: TextEditor -> TextEditor
 paste :: TextEditor -> TextEditor
 
@@ -20,6 +24,7 @@ lineStart(TextEditor(l, hi, ri, b)) = (TextEditor(" | ", [ ], l ++ " " ++ ri, b)
 lineEnd(TextEditor(l, hi, ri, b)) = (TextEditor(l ++ " " ++ ri, [ ], " | ", b))
 
 -- Character Insert
+-- TODO: Add error checking / pre-processing checks
 characterInsert char (TextEditor(l, hi, r, b)) = (TextEditor(reverse (char: reverse l), hi, r, b))
 
 -- Character Delete
@@ -27,6 +32,20 @@ characterDelete(TextEditor(l, hi, r, b)) = (TextEditor(((l ++  "|" ++ (tail r)),
 
 -- Backspace
 backspace(TextEditor(l, hi, ri, b)) = (TextEditor(reverse (tail(reverse l)), hi, ri, b))
+
+-- Highlight To The Start
+highlightToStart(TextEditor(l, hi, ri, b)) = (TextEditor(" ", l, ri, b))
+
+-- Highlight To The End
+highlightToEnd(TextEditor(l, hi, ri, b)) = (TextEditor(l, ri, " ", b))
+
+-- Highlight Character Before
+highlightCharacterBefore(TextEditor(l, hi, ri, b)) = (TextEditor(reverse (tail(reverse l)), reverse [head l], ri, b))
+
+-- Highlight Character After
+highlightCharacterAfter(TextEditor(l, hi, ri, b)) = (TextEditor(l, [head ri] , (tail ri), b))
+
+-- Highlight Everything
 
 -- Copy
 copy(TextEditor(l, hi, r, b)) = (TextEditor(l, hi, r, hi))
