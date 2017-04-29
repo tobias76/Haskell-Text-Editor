@@ -16,8 +16,10 @@ highlightToStart :: TextEditor -> TextEditor
 highlightToEnd :: TextEditor -> TextEditor
 highlightCharacterBefore :: TextEditor -> TextEditor
 highlightCharacterAfter :: TextEditor -> TextEditor
+highlightEverything :: TextEditor -> TextEditor
 copy :: TextEditor -> TextEditor
 paste :: TextEditor -> TextEditor
+cut :: TextEditor -> TextEditor
 
 -- Move Left
 -- TODO: Check this is right with Callum
@@ -56,10 +58,14 @@ highlightCharacterBefore(TextEditor(l, hi, ri, b)) = (TextEditor(reverse (tail(r
 highlightCharacterAfter(TextEditor(l, hi, ri, b)) = (TextEditor(l, [head ri] , (tail ri), b))
 
 -- Highlight Everything
+highlightEverything(TextEditor(l, hi, ri, b)) = (TextEditor(" ", l ++ ri, " ", b ))
 
 -- Copy
-copy(TextEditor(l, hi, r, b)) = (TextEditor(l, hi, r, hi))
+copy(TextEditor(l, hi, ri, b)) = (TextEditor(l, hi, ri, hi))
 
 -- Paste
 -- TODO: Add error checking
-paste(TextEditor(l, hi, r, b)) = (TextEditor(l ++ b, hi, r, b))
+paste(TextEditor(l, hi, ri, b)) = (TextEditor(l ++ b, hi, ri, b))
+
+-- Cut
+cut(TextEditor(l, hi, ri, b)) = (TextEditor(l, " ", ri, hi))
