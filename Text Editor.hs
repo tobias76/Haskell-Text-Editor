@@ -18,7 +18,7 @@ characterInsert char (TextEditor(l, hi, r, b)) = (TextEditor(reverse (char: reve
 characterDelete(TextEditor(l, hi, r, b)) = (TextEditor(((l ++  "|" ++ (tail r)), hi, " ", b)))
 
 -- Backspace
--- TODO: Write Backspace
+backspace(TextEditor(l, hi, ri, b)) = (TextEditor(reverse (tail(reverse l)), hi, ri, b)) 
 
 -- Copy
 copy(TextEditor(l, hi, r, b)) = (TextEditor(l, hi, r, hi))
