@@ -2,7 +2,7 @@ data TextEditor = TextEditor ([Char],[Char],[Char],[Char]) deriving(Show)
 
 text :: TextEditor
 
-text = TextEditor("The cat", " ", "sat on the mat", " ")
+text = TextEditor("The cat sat", " ", " on the mat", " ")
 
 -- Define the functions
 moveLeft :: TextEditor -> TextEditor
