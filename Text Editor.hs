@@ -27,7 +27,7 @@ moveLeft(TextEditor(l, hi, ri, b)) = (TextEditor(l , hi, [head(reverse l)] ++ ri
 
 -- Move Right
 -- TODO: Find a way to reverse this again
-moveRight(TextEditor(l, hi, ri, b)) = (TextEditor((reverse l) ++ [head ri], hi, tail ri, b))
+moveRight(TextEditor(l, hi, ri, b)) = (TextEditor(reverse(head r :(reverse l)), hi, tail ri, b))
 
 -- Line Start
 lineStart(TextEditor(l, hi, ri, b)) = (TextEditor(" | ", [ ], l ++ " " ++ ri, b))
