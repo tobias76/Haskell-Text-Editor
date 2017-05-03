@@ -2,7 +2,7 @@ data TextEditor = TextEditor ([Char],[Char],[Char],[Char]) deriving(Show)
 
 text :: TextEditor
 
-text = TextEditor("The cat sat", " ", " on the mat", " ")
+text = TextEditor("The cat sat", " ", " on the mat", " Testing ")
 
 -- Define the functions
 moveLeft :: TextEditor -> TextEditor
@@ -22,7 +22,6 @@ paste :: TextEditor -> TextEditor
 cut :: TextEditor -> TextEditor
 
 -- Move Left
--- TODO: Check this is right with Callum
 moveLeft(TextEditor(l, hi, ri, b)) = (TextEditor(l , hi, [head(reverse l)] ++ ri , b))
 
 -- Move Right
@@ -35,8 +34,12 @@ lineStart(TextEditor(l, hi, ri, b)) = (TextEditor(" | ", [ ], l ++ " " ++ ri, b)
 lineEnd(TextEditor(l, hi, ri, b)) = (TextEditor(l ++ " " ++ ri, [ ], " | ", b))
 
 -- Character Insert
--- TODO: Add error checking / pre-processing checks
-characterInsert char (TextEditor(l, hi, r, b)) = (TextEditor(reverse (char: reverse l), hi, r, b))
+--characterInsert char (TextEditor(l, hi, r, b)) = (TextEditor(reverse (char: reverse l), hi, r, b))
+characterInsert char (TextEditor(l, hi, ri, b)) =
+  if length l + length ri + length hi < 1023
+  -- If it is too long then don't add
+  then TextEditor((l, hi, ri, b))
+  else (TextEditor(reverse (char: reverse l), hi, ri, b))
 
 -- Character Delete
 characterDelete(TextEditor(l, hi, r, b)) = (TextEditor(((l ++  "|" ++ (tail r)), hi, " ", b)))
@@ -63,8 +66,10 @@ highlightEverything(TextEditor(l, hi, ri, b)) = (TextEditor(" ", l ++ ri, " ", b
 copy(TextEditor(l, hi, ri, b)) = (TextEditor(l, hi, ri, hi))
 
 -- Paste
--- TODO: Add error checking
-paste(TextEditor(l, hi, ri, b)) = (TextEditor(l ++ b, hi, ri, b))
+paste(TextEditor(l, hi, ri, b)) =
+    if length l + length ri + length hi < 1023 && length b > 0
+      then (TextEditor(l ++ b, hi, ri, b))
+        else (TextEditor(l, hi, ri, b))
 
 -- Cut
 cut(TextEditor(l, hi, ri, b)) = (TextEditor(l, " ", ri, hi))
