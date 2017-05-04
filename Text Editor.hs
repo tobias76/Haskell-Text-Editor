@@ -2,7 +2,7 @@ data TextEditor = TextEditor ([Char],[Char],[Char],[Char]) deriving(Show)
 
 text :: TextEditor
 
-text = TextEditor("The cat sat", " ", " on the mat", " Testing ")
+text = TextEditor("The cat sat", " ", " on the mat", " Buffer ")
 
 -- Define the functions
 moveLeft :: TextEditor -> TextEditor
@@ -34,15 +34,16 @@ lineStart(TextEditor(l, hi, ri, b)) = (TextEditor(" | ", [ ], l ++ " " ++ ri, b)
 lineEnd(TextEditor(l, hi, ri, b)) = (TextEditor(l ++ " " ++ ri, [ ], " | ", b))
 
 -- Character Insert
---characterInsert char (TextEditor(l, hi, r, b)) = (TextEditor(reverse (char: reverse l), hi, r, b))
 characterInsert char (TextEditor(l, hi, ri, b)) =
   if length l + length ri + length hi < 1023
-  -- If it is too long then don't add
-  then TextEditor((l, hi, ri, b))
-  else (TextEditor(reverse (char: reverse l), hi, ri, b))
+    then TextEditor((l, hi, ri, b))
+      else (TextEditor(reverse (char: reverse l), hi, ri, b))
 
 -- Character Delete
-characterDelete(TextEditor(l, hi, r, b)) = (TextEditor(((l ++  "|" ++ (tail r)), hi, " ", b)))
+characterDelete(TextEditor(l, hi, ri, b)) =
+   if length ri < 0
+     then (TextEditor(((l ++  "|" ++ (tail ri)), hi, " ", b)))
+      else (TextEditor(l, hi, ri, b))
 
 -- Backspace
 backspace(TextEditor(l, hi, ri, b)) = (TextEditor(reverse (tail(reverse l)), hi, ri, b))
@@ -63,8 +64,10 @@ highlightCharacterAfter(TextEditor(l, hi, ri, b)) = (TextEditor(l, [head ri] , (
 highlightEverything(TextEditor(l, hi, ri, b)) = (TextEditor(" ", l ++ ri, " ", b ))
 
 -- Copy
-copy(TextEditor(l, hi, ri, b)) = (TextEditor(l, hi, ri, hi))
-
+copy(TextEditor(l, hi, ri, b)) =
+   if length hi > 0
+     then (TextEditor(l, hi, ri, hi))
+       else (TextEditor(l, hi, ri, b))
 -- Paste
 paste(TextEditor(l, hi, ri, b)) =
     if length l + length ri + length hi < 1023 && length b > 0
@@ -72,4 +75,8 @@ paste(TextEditor(l, hi, ri, b)) =
         else (TextEditor(l, hi, ri, b))
 
 -- Cut
-cut(TextEditor(l, hi, ri, b)) = (TextEditor(l, " ", ri, hi))
+--TODO: Why won't this compile?
+  --cut(TextEditor(l, hi, ri, b)) =
+    --if length hi > 0
+    --  then (TextEditor(l, " ", ri, hi))
+    --   else TextEditor(l, hi, ri, b)
